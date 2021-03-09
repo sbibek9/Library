@@ -12,7 +12,7 @@ namespace Library
             Console.WriteLine("Library Mangament Menu");
             // 1. Add books
             // 2. Search Books
-            // 3. View Issued Books
+            // 3. View Books
             // 4. Issue Books
             // 5. Return Books
             
@@ -27,6 +27,7 @@ namespace Library
             List<Book> books = new List<Book>();
             while (true)
             {
+                Console.Write("Option: ");
                 string option = Console.ReadLine();
                
                 try
@@ -39,11 +40,17 @@ namespace Library
                             books.Add(val);
                             break;
                         case 2:
+                            if (books.Count == 0)
+                            {
+                                Console.WriteLine("Nothing to Search");
+                                break;
+                            }
                             Console.WriteLine("Enter the name of the book to be searched.");
                             string bookname = Console.ReadLine();
                             search(books,bookname);
                             break;
                         case 3:
+                            
                             if (books.Count == 0)
                             {
                                 Console.WriteLine("Nothing to display");
@@ -53,9 +60,19 @@ namespace Library
                             view(books);
                             break;
                         case 4:
+                            if (books.Count == 0)
+                            {
+                                Console.WriteLine("Nothing to Issue");
+                                break;
+                            }
                             Console.WriteLine("Enter the name of the book to be issued?");
                             string bname = Console.ReadLine();
                             var item = issue(books, bname);
+                            if (item == null)
+                            {
+                                Console.WriteLine("Book not found");
+                                break;
+                            }
                             foreach (Book value in books)
                             {
                                 if (value.bName == item.bName)
@@ -66,9 +83,19 @@ namespace Library
                             }
                             break;
                         case 5:
+                            if (books.Count == 0)
+                            {
+                                Console.WriteLine("Nothing to Return");
+                                break;
+                            }
                             Console.WriteLine("Enter the name of the book to be returned");
                             string name = Console.ReadLine();
                             var retunedItem = returnBooks(books,name);
+                            if ( retunedItem == null)
+                            {
+                                Console.WriteLine("No book issued under that name.");
+                                break;
+                            }
                             foreach (Book value in books)
                             {
                                 if (value.bName == retunedItem.bName && value.issued != false)
@@ -93,8 +120,15 @@ namespace Library
         }
         static Book add()
         {
-            Book item= new Book(1001,"Introduction to C#","Book Author","Me");
-            Console.WriteLine("Adding something");
+            Console.Write("Book ID: ");
+            string id = Console.ReadLine();
+            Console.Write("Book Name: ");
+            string bname = Console.ReadLine();
+            Console.Write("Book Author: ");
+            string author = Console.ReadLine();
+            Console.Write("Book Publisher: ");
+            string publisher = Console.ReadLine();
+            Book item= new Book(Int32.Parse(id),bname,author,publisher);
             return item;
         }
         static void search(List<Book> books,string bName)
@@ -112,7 +146,7 @@ namespace Library
             {
                 Console.WriteLine("Not Found");
             }
-            Console.WriteLine("searching something");
+           
         }
         static void view(List<Book> Book)
         {
@@ -123,7 +157,7 @@ namespace Library
         }
         static Book issue(List<Book> books,string bname)
         {
-            Console.WriteLine("Issuing something");
+           
             foreach (Book item in books)
             {
                 if (item.bName == bname && item.issued!= true)
@@ -136,7 +170,7 @@ namespace Library
         }
         static Book returnBooks(List<Book> books,string bName)
         {
-            Console.WriteLine("returning something");
+            
             foreach (Book book in books)
             {
                 if (book.bName == bName && book.issued != false)
@@ -145,6 +179,14 @@ namespace Library
                 }
             }
             return null;
+        }
+        static bool isNotEmpty(List<Book> books)
+        {
+            if (books.Count < 0)
+            {
+                return true;
+            }
+            return false;
         }
     }
 }
